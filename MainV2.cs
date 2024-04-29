@@ -49,7 +49,10 @@ namespace MissionPlanner
 
         public static menuicons displayicons; //do not initialize to allow update of custom icons
         public static string running_directory = Settings.GetRunningDirectory();
-        
+
+        bool isFirstClick = true;
+        Thread detectionThread;
+
         public abstract class menuicons
         {
             public abstract Image fd { get; }
@@ -2003,6 +2006,28 @@ namespace MissionPlanner
             }
         }
 
+        private void StartDetectionThread()
+        {
+            detectionThread = new Thread(DetectionLoop);
+            detectionThread.Start();
+        }
+
+        private void DetectionLoop()
+        {
+            while (true)
+            {
+                if (comPort.BaseStream.IsOpen == false)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        Connect();
+                        SaveConfig();
+                    });
+                  
+                }
+                Thread.Sleep(1000);
+            }
+        }
 
         private void MenuConnect_Click(object sender, EventArgs e)
         {
@@ -2010,6 +2035,12 @@ namespace MissionPlanner
 
             // save config
             SaveConfig();
+
+            if (isFirstClick == true)
+            {
+                StartDetectionThread();
+                isFirstClick = false;
+            }
         }
 
         private void Connect()
@@ -2164,6 +2195,11 @@ namespace MissionPlanner
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
+            if(detectionThread != null && detectionThread.IsAlive)
+            {
+                detectionThread.Abort();
+            }
+
             base.OnClosing(e);
 
             log.Info("MainV2_FormClosing");

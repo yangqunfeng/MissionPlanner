@@ -77,6 +77,8 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 comPort = new TcpSerial();
             }
         }
+        private ButtonMonitor buttonMonitor;
+        private bool isMonitorOpen = false;
         public ConfigSerialInjectGPS()
         {
             InitializeComponent();
@@ -137,6 +139,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             rtcm3.ObsMessage += Rtcm3_ObsMessage;
 
             MissionPlanner.Utilities.Tracking.AddPage(this.GetType().ToString(), this.Text);
+
         }
 
         private void Rtcm3_ObsMessage(object sender, EventArgs e)
@@ -295,6 +298,17 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             else
             {
                 DoConnect();
+            }
+
+            if (isMonitorOpen == false)
+            {
+                // 在构造函数中创建 ButtonMonitor 实例
+                buttonMonitor = new ButtonMonitor(BUT_connect);
+
+                // 启动按钮监视
+                buttonMonitor.StartMonitoring();
+
+                isMonitorOpen = true;
             }
         }
 

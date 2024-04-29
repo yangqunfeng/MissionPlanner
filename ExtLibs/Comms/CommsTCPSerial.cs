@@ -122,11 +122,52 @@ namespace MissionPlanner.Comms
 
                     if (!reconnectnoprompt)
                     {
-                        if (inputboxreturn.Cancel == OnInputBoxShow("remote host",
+                        /*if (inputboxreturn.Cancel == OnInputBoxShow("remote host",
                             "Enter host name/ip (ensure remote end is already started)", ref host))
                             throw new Exception("Canceled by request");
                         if (inputboxreturn.Cancel == OnInputBoxShow("remote Port", "Enter remote port", ref dest))
-                            throw new Exception("Canceled by request");
+                            throw new Exception("Canceled by request");*/
+
+                        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NTRIP.txt");
+
+                        try
+                        {
+                            // 检查文件是否存在
+                            if (File.Exists(filePath))
+                            {
+                                // 读取文件的第二行和第三行文本
+                                string[] lines = File.ReadAllLines(filePath);
+
+                                if (lines.Length >= 2)
+                                {
+                                    log.Info("hostIP： " + lines[1]);
+                                    host = lines[1];
+                                }
+                                else
+                                {
+                                    log.Error("文件不足两行.");
+                                }
+
+                                if (lines.Length >= 3)
+                                {
+                                    log.Info("host port： " + lines[2]);
+                                    dest = lines[2];
+                                }
+                                else
+                                {
+                                    log.Error("文件不足三行.");
+                                }
+                            }
+                            else
+                            {
+                                log.Error("文件不存在.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("发生错误: " + ex.Message);
+                        }
+
                     }
                     Host = host;
                 }

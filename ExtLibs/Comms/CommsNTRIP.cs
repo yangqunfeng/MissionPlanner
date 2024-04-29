@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using log4net;
+using System.Linq;
+//using System.Windows.Forms;
 
 // dns, ip address
 // tcplistner
@@ -105,13 +107,41 @@ namespace MissionPlanner.Comms
 
             var url = OnSettings("NTRIP_url", "");
 
-            if (OnInputBoxShow("remote host", "Enter url (eg http://user:pass@host:port/mount)", ref url) ==
+            /*if (OnInputBoxShow("remote host", "Enter url (eg http://user:pass@host:port/mount)", ref url) ==
                 inputboxreturn.Cancel)
-                throw new Exception("Canceled by request");
+                throw new Exception("Canceled by request");*/
 
-            OnSettings("NTRIP_url", url, true);
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NTRIP.txt");
 
-            Open(url);
+            try
+            {
+                // 检查文件是否存在
+                if (File.Exists(filePath))
+                {
+                    // 读取文件的第一行文本
+                    string firstLine = File.ReadLines(filePath).FirstOrDefault();
+                    url = firstLine;
+
+                    if (firstLine != null)
+                    {
+                        log.Info("NTRIP： " + firstLine);
+                        OnSettings("NTRIP_url", url, true);
+                        Open(url);
+                    }
+                    else
+                    {
+                        log.Error("NTRIP.txt文件为空. 错误");
+                    }
+                }
+                else
+                {
+                    log.Error("NTRIP文件不存在.");
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("NTRIP发生错误");
+            }
         }
 
         public static string PercentEncode(string value)

@@ -793,6 +793,7 @@
     <Compile Include="Controls\FollowMe.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ButtonMonitor.cs" />
     <Compile Include="GCSViews\ConfigurationView\ConfigADSB.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -2054,12 +2055,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainV2.uk.resx">
       <DependentUpon>MainV2.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainV2.zh-Hans.resx">
       <DependentUpon>MainV2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainV2.zh-Hant.resx">
       <DependentUpon>MainV2.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainV2.zh-TW.resx">
       <DependentUpon>MainV2.cs</DependentUpon>
@@ -2379,6 +2382,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Antenna\TrackerUI.ar.resx">
       <DependentUpon>TrackerUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Antenna\TrackerUI.az-Latn-AZ.resx">
       <DependentUpon>TrackerUI.cs</DependentUpon>
